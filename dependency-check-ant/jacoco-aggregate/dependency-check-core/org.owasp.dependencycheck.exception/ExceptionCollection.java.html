@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ExceptionCollection.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Dependency-Check Ant Task</a> &gt; <a href="../index.html" class="el_bundle">dependency-check-core</a> &gt; <a href="index.source.html" class="el_package">org.owasp.dependencycheck.exception</a> &gt; <span class="el_source">ExceptionCollection.java</span></div><h1>ExceptionCollection.java</h1><pre class="source lang-java linenums">/*
+ * This file is part of dependency-check-core.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Copyright (c) 2016 Jeremy Long. All Rights Reserved.
+ */
+package org.owasp.dependencycheck.exception;
+
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.concurrent.NotThreadSafe;
+
+/**
+ * A collection of several exceptions.
+ *
+ * @author Jeremy Long
+ */
+@NotThreadSafe
+public class ExceptionCollection extends Exception {
+    /**
+     * The serial version uid.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * A collection of exceptions.
+     */
+    private final List&lt;Throwable&gt; exceptions;
+    /**
+     * Flag indicating if a fatal exception occurred that would prevent the
+     * attempt at completing the analysis even if exceptions occurred.
+     */
+<span class="pc" id="L45">    private boolean fatal = false;</span>
+
+    /**
+     * Instantiates a new exception collection.
+     *
+     * @param exceptions a list of exceptions
+     */
+    public ExceptionCollection(List&lt;Throwable&gt; exceptions) {
+<span class="nc" id="L53">        super();</span>
+<span class="nc" id="L54">        this.exceptions = exceptions;</span>
+<span class="nc" id="L55">    }</span>
+
+    /**
+     * Instantiates a new exception collection.
+     *
+     * @param msg the exception message
+     * @param exceptions a list of exceptions
+     */
+    public ExceptionCollection(String msg, List&lt;Throwable&gt; exceptions) {
+<span class="fc" id="L64">        super(msg);</span>
+<span class="fc" id="L65">        this.exceptions = exceptions;</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Instantiates a new exception collection.
+     *
+     * @param exceptions a list of exceptions
+     * @param fatal indicates if any of the exceptions that occurred is fatal - meaning
+     * that no analysis was performed.
+     */
+    public ExceptionCollection(List&lt;Throwable&gt; exceptions, boolean fatal) {
+<span class="nc" id="L76">        super();</span>
+<span class="nc" id="L77">        this.exceptions = exceptions;</span>
+<span class="nc" id="L78">        this.fatal = fatal;</span>
+<span class="nc" id="L79">    }</span>
+
+    /**
+     * Instantiates a new exception collection.
+     *
+     * @param msg the exception message
+     * @param exceptions a list of exceptions
+     * @param fatal indicates if any of the exceptions that occurred is fatal - meaning
+     * that no analysis was performed.
+     */
+    public ExceptionCollection(String msg, List&lt;Throwable&gt; exceptions, boolean fatal) {
+<span class="nc" id="L90">        super(msg);</span>
+<span class="nc" id="L91">        this.exceptions = exceptions;</span>
+<span class="nc" id="L92">        this.fatal = fatal;</span>
+<span class="nc" id="L93">    }</span>
+
+    /**
+     * Instantiates a new exception collection.
+     *
+     * @param exceptions a list of exceptions
+     * @param fatal indicates if the exception that occurred is fatal - meaning
+     * that no analysis was performed.
+     */
+    public ExceptionCollection(Throwable exceptions, boolean fatal) {
+<span class="nc" id="L103">        super();</span>
+<span class="nc" id="L104">        this.exceptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L105">        this.exceptions.add(exceptions);</span>
+<span class="nc" id="L106">        this.fatal = fatal;</span>
+<span class="nc" id="L107">    }</span>
+
+    /**
+     * Instantiates a new exception collection.
+     *
+     * @param msg the exception message
+     * @param exception a list of exceptions
+     */
+    public ExceptionCollection(String msg, Throwable exception) {
+<span class="nc" id="L116">        super(msg);</span>
+<span class="nc" id="L117">        this.exceptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L118">        this.exceptions.add(exception);</span>
+<span class="nc" id="L119">        this.fatal = false;</span>
+<span class="nc" id="L120">    }</span>
+
+    /**
+     * Instantiates a new exception collection.
+     */
+    public ExceptionCollection() {
+<span class="nc" id="L126">        super();</span>
+<span class="nc" id="L127">        this.exceptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Get the value of exceptions.
+     *
+     * @return the value of exceptions
+     */
+    public List&lt;Throwable&gt; getExceptions() {
+<span class="fc" id="L136">        return exceptions;</span>
+    }
+
+    /**
+     * Adds an exception to the collection.
+     *
+     * @param ex the exception to add
+     */
+    public void addException(Throwable ex) {
+<span class="nc" id="L145">        this.exceptions.add(ex);</span>
+<span class="nc" id="L146">    }</span>
+
+    /**
+     * Adds an exception to the collection.
+     *
+     * @param ex the exception to add
+     * @param fatal flag indicating if this is a fatal error
+     */
+    public void addException(Throwable ex, boolean fatal) {
+<span class="nc" id="L155">        addException(ex);</span>
+<span class="nc" id="L156">        this.fatal = fatal;</span>
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Get the value of fatal.
+     *
+     * @return the value of fatal
+     */
+    public boolean isFatal() {
+<span class="nc" id="L165">        return fatal;</span>
+    }
+
+    /**
+     * Set the value of fatal.
+     *
+     * @param fatal new value of fatal
+     */
+    public void setFatal(boolean fatal) {
+<span class="nc" id="L174">        this.fatal = fatal;</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Prints the stack trace.
+     *
+     * @param s the writer to print to
+     */
+    @Override
+    public void printStackTrace(PrintWriter s) {
+<span class="nc" id="L184">        s.println(&quot;Multiple Exceptions Occurred&quot;);</span>
+<span class="nc" id="L185">        super.printStackTrace(s);</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        for (Throwable t : this.exceptions) {</span>
+<span class="nc" id="L187">            s.println(&quot;Next Exception:&quot;);</span>
+<span class="nc" id="L188">            t.printStackTrace(s);</span>
+<span class="nc" id="L189">        }</span>
+<span class="nc" id="L190">    }</span>
+
+    /**
+     * Prints the stack trace.
+     *
+     * @param s the stream to write the stack trace to
+     */
+    @Override
+    public void printStackTrace(PrintStream s) {
+<span class="nc" id="L199">        s.println(&quot;Multiple Exceptions Occurred&quot;);</span>
+<span class="nc" id="L200">        super.printStackTrace(s);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        for (Throwable t : this.exceptions) {</span>
+<span class="nc" id="L202">            s.println(&quot;Next Exception:&quot;);</span>
+<span class="nc" id="L203">            t.printStackTrace(s);</span>
+<span class="nc" id="L204">        }</span>
+<span class="nc" id="L205">    }</span>
+
+    /**
+     * Returns the error message, including the message from all contained
+     * exceptions.
+     *
+     * @return the error message
+     */
+    @Override
+    public String getMessage() {
+<span class="fc" id="L215">        final StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L216">        final String msg = super.getMessage();</span>
+<span class="pc bpc" id="L217" title="2 of 4 branches missed.">        if (msg == null || msg.isEmpty()) {</span>
+<span class="nc" id="L218">            sb.append(&quot;One or more exceptions occurred during analysis:&quot;);</span>
+        } else {
+<span class="fc" id="L220">            sb.append(msg);</span>
+        }
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        for (Throwable t : this.exceptions) {</span>
+<span class="fc" id="L223">            sb.append(&quot;\n\t&quot;).append(t.getMessage());</span>
+<span class="fc" id="L224">        }</span>
+<span class="fc" id="L225">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

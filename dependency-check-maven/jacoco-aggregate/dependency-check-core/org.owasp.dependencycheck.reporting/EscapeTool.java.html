@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>EscapeTool.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Dependency-Check Maven Plugin</a> &gt; <a href="../index.html" class="el_bundle">dependency-check-core</a> &gt; <a href="index.source.html" class="el_package">org.owasp.dependencycheck.reporting</a> &gt; <span class="el_source">EscapeTool.java</span></div><h1>EscapeTool.java</h1><pre class="source lang-java linenums">/*
+ * This file is part of dependency-check-core.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Copyright (c) 2014 Jeremy Long. All Rights Reserved.
+ */
+package org.owasp.dependencycheck.reporting;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Set;
+import javax.annotation.concurrent.ThreadSafe;
+import org.apache.commons.text.StringEscapeUtils;
+import org.owasp.dependencycheck.dependency.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * An extremely simple wrapper around various escape utils to perform URL and
+ * HTML encoding within the reports. This class was created to simplify the
+ * velocity configuration and avoid using the &quot;built-in&quot; escape tool.
+ *
+ * @author Jeremy Long
+ */
+@ThreadSafe
+<span class="fc" id="L37">public class EscapeTool {</span>
+
+    /**
+     * The logger.
+     */
+<span class="fc" id="L42">    private static final Logger LOGGER = LoggerFactory.getLogger(EscapeTool.class);</span>
+
+    /**
+     * URL Encodes the provided text.
+     *
+     * @param text the text to encode
+     * @return the URL encoded text
+     */
+    public String url(String text) {
+<span class="pc bpc" id="L51" title="2 of 4 branches missed.">        if (text == null || text.isEmpty()) {</span>
+<span class="nc" id="L52">            return text;</span>
+        }
+        try {
+<span class="fc" id="L55">            return URLEncoder.encode(text, &quot;UTF-8&quot;);</span>
+<span class="nc" id="L56">        } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L57">            LOGGER.warn(&quot;UTF-8 is not supported?&quot;);</span>
+<span class="nc" id="L58">            LOGGER.info(&quot;&quot;, ex);</span>
+        }
+<span class="nc" id="L60">        return &quot;&quot;;</span>
+    }
+
+    /**
+     * HTML Encodes the provided text.
+     *
+     * @param text the text to encode
+     * @return the HTML encoded text
+     */
+    public String html(String text) {
+<span class="pc bpc" id="L70" title="1 of 4 branches missed.">        if (text == null || text.isEmpty()) {</span>
+<span class="fc" id="L71">            return text;</span>
+        }
+<span class="fc" id="L73">        return StringEscapeUtils.escapeHtml4(text);</span>
+    }
+
+    /**
+     * XML Encodes the provided text.
+     *
+     * @param text the text to encode
+     * @return the XML encoded text
+     */
+    public String xml(String text) {
+<span class="pc bpc" id="L83" title="1 of 4 branches missed.">        if (text == null || text.isEmpty()) {</span>
+<span class="fc" id="L84">            return text;</span>
+        }
+<span class="fc" id="L86">        return StringEscapeUtils.escapeXml11(text);</span>
+    }
+
+    /**
+     * JSON Encodes the provided text.
+     *
+     * @param text the text to encode
+     * @return the JSON encoded text
+     */
+    public String json(String text) {
+<span class="pc bpc" id="L96" title="1 of 4 branches missed.">        if (text == null || text.isEmpty()) {</span>
+<span class="fc" id="L97">            return text;</span>
+        }
+<span class="fc" id="L99">        return StringEscapeUtils.escapeJson(text);</span>
+    }
+
+    /**
+     * JavaScript encodes the provided text.
+     *
+     * @param text the text to encode
+     * @return the JavaScript encoded text
+     */
+    public String javascript(String text) {
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">        if (text == null || text.isEmpty()) {</span>
+<span class="fc" id="L110">            return text;</span>
+        }
+        //until lang3 has escapeJavaScript we use this...
+<span class="fc" id="L113">        return org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(text);</span>
+    }
+
+    /**
+     * Formats text for CSV format. This includes trimming whitespace, replace
+     * line breaks with spaces, and if necessary quotes the text and/or escapes
+     * contained quotes.
+     *
+     * @param text the text to escape and quote
+     * @return the escaped and quoted text
+     */
+    public String csv(String text) {
+<span class="pc bpc" id="L125" title="2 of 4 branches missed.">        if (text == null || text.isEmpty()) {</span>
+<span class="nc" id="L126">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L128">        final String str = text.trim().replace(&quot;\n&quot;, &quot; &quot;);</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (str.length() == 0) {</span>
+<span class="nc" id="L130">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L132">        return StringEscapeUtils.escapeCsv(str);</span>
+    }
+
+    /**
+     * Takes a set of Identifiers, filters them to none CPE, and formats them
+     * for display in a CSV.
+     *
+     * @param ids the set of identifiers
+     * @return the formatted list of none CPE identifiers
+     */
+    public String csvIdentifiers(Set&lt;Identifier&gt; ids) {
+<span class="pc bpc" id="L143" title="2 of 4 branches missed.">        if (ids == null || ids.isEmpty()) {</span>
+<span class="nc" id="L144">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L146">        boolean addComma = false;</span>
+<span class="fc" id="L147">        final StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (Identifier id : ids) {</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (!&quot;cpe&quot;.equals(id.getType())) {</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">                if (addComma) {</span>
+<span class="fc" id="L151">                    sb.append(&quot;, &quot;);</span>
+                } else {
+<span class="fc" id="L153">                    addComma = true;</span>
+                }
+<span class="fc" id="L155">                sb.append(id.getValue());</span>
+            }
+<span class="fc" id="L157">        }</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (sb.length() == 0) {</span>
+<span class="fc" id="L159">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L161">        return StringEscapeUtils.escapeCsv(sb.toString());</span>
+    }
+
+    /**
+     * Takes a set of Identifiers, filters them to just CPEs, and formats them
+     * for display in a CSV.
+     *
+     * @param ids the set of identifiers
+     * @return the formatted list of CPE identifiers
+     */
+    public String csvCpe(Set&lt;Identifier&gt; ids) {
+<span class="pc bpc" id="L172" title="2 of 4 branches missed.">        if (ids == null || ids.isEmpty()) {</span>
+<span class="nc" id="L173">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L175">        boolean addComma = false;</span>
+<span class="fc" id="L176">        final StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        for (Identifier id : ids) {</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">            if (&quot;cpe&quot;.equals(id.getType())) {</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                if (addComma) {</span>
+<span class="fc" id="L180">                    sb.append(&quot;, &quot;);</span>
+                } else {
+<span class="fc" id="L182">                    addComma = true;</span>
+                }
+<span class="fc" id="L184">                sb.append(id.getValue());</span>
+            }
+<span class="fc" id="L186">        }</span>
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">        if (sb.length() == 0) {</span>
+<span class="nc" id="L188">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L190">        return StringEscapeUtils.escapeCsv(sb.toString());</span>
+    }
+
+    /**
+     * Takes a set of Identifiers, filters them to just CPEs, and formats them
+     * for confidence display in a CSV.
+     *
+     * @param ids the set of identifiers
+     * @return the formatted list of confidence
+     */
+    public String csvCpeConfidence(Set&lt;Identifier&gt; ids) {
+<span class="pc bpc" id="L201" title="2 of 4 branches missed.">        if (ids == null || ids.isEmpty()) {</span>
+<span class="nc" id="L202">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L204">        boolean addComma = false;</span>
+<span class="fc" id="L205">        final StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        for (Identifier id : ids) {</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">            if (&quot;cpe&quot;.equals(id.getType())) {</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">                if (addComma) {</span>
+<span class="fc" id="L209">                    sb.append(&quot;, &quot;);</span>
+                } else {
+<span class="fc" id="L211">                    addComma = true;</span>
+                }
+<span class="fc" id="L213">                sb.append(id.getConfidence());</span>
+            }
+<span class="fc" id="L215">        }</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        if (sb.length() == 0) {</span>
+<span class="nc" id="L217">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L219">        return StringEscapeUtils.escapeCsv(sb.toString());</span>
+    }
+
+    /**
+     * Takes a set of Identifiers, filters them to just GAVs, and formats them
+     * for display in a CSV.
+     *
+     * @param ids the set of identifiers
+     * @return the formatted list of GAV identifiers
+     */
+    public String csvGav(Set&lt;Identifier&gt; ids) {
+<span class="pc bpc" id="L230" title="2 of 4 branches missed.">        if (ids == null || ids.isEmpty()) {</span>
+<span class="nc" id="L231">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L233">        boolean addComma = false;</span>
+<span class="fc" id="L234">        final StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        for (Identifier id : ids) {</span>
+<span class="pc bpc" id="L236" title="1 of 4 branches missed.">            if (&quot;maven&quot;.equals(id.getType()) || &quot;npm&quot;.equals(id.getType())) {</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                if (addComma) {</span>
+<span class="fc" id="L238">                    sb.append(&quot;, &quot;);</span>
+                } else {
+<span class="fc" id="L240">                    addComma = true;</span>
+                }
+<span class="fc" id="L242">                sb.append(id.getValue());</span>
+            }
+<span class="fc" id="L244">        }</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (sb.length() == 0) {</span>
+<span class="fc" id="L246">            return &quot;\&quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L248">        return StringEscapeUtils.escapeCsv(sb.toString());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
