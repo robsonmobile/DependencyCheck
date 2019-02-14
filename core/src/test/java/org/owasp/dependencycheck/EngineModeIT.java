@@ -69,12 +69,12 @@ public class EngineModeIT extends BaseTest {
         try (Engine engine = new Engine(Engine.Mode.EVIDENCE_COLLECTION, getSettings())) {
             engine.openDatabase(); //does nothing in the current mode
             assertDatabase(false);
-            for (AnalysisPhase phase : Engine.Mode.EVIDENCE_COLLECTION.getPhases()) {
+            Engine.Mode.EVIDENCE_COLLECTION.getPhases().forEach((phase) -> {
                 assertThat(engine.getAnalyzers(phase), is(notNullValue()));
-            }
-            for (AnalysisPhase phase : Engine.Mode.EVIDENCE_PROCESSING.getPhases()) {
+            });
+            Engine.Mode.EVIDENCE_PROCESSING.getPhases().forEach((phase) -> {
                 assertThat(engine.getAnalyzers(phase), is(nullValue()));
-            }
+            });
             File file = BaseTest.getResourceAsFile(this, "struts2-core-2.1.2.jar");
             engine.scan(file);
             engine.analyzeDependencies();
@@ -89,12 +89,12 @@ public class EngineModeIT extends BaseTest {
         try (Engine engine = new Engine(Engine.Mode.EVIDENCE_PROCESSING, getSettings())) {
             engine.openDatabase();
             assertDatabase(true);
-            for (AnalysisPhase phase : Engine.Mode.EVIDENCE_PROCESSING.getPhases()) {
+            Engine.Mode.EVIDENCE_PROCESSING.getPhases().forEach((phase) -> {
                 assertThat(engine.getAnalyzers(phase), is(notNullValue()));
-            }
-            for (AnalysisPhase phase : Engine.Mode.EVIDENCE_COLLECTION.getPhases()) {
+            });
+            Engine.Mode.EVIDENCE_COLLECTION.getPhases().forEach((phase) -> {
                 assertThat(engine.getAnalyzers(phase), is(nullValue()));
-            }
+            });
             engine.addDependency(dependencies[0]);
             engine.analyzeDependencies();
             Dependency dependency = dependencies[0];

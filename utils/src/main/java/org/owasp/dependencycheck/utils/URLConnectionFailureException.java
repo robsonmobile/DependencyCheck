@@ -27,9 +27,9 @@ import java.io.IOException;
 public class URLConnectionFailureException extends IOException {
 
     /**
-     * The serial version UID.
+     * The serial version UID for serialization.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5899631979662570824L;
 
     /**
      * Creates a new URLConnectionFailureException.

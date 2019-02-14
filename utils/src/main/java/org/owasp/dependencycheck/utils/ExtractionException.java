@@ -27,9 +27,9 @@ import java.io.IOException;
 public class ExtractionException extends IOException {
 
     /**
-     * The serial version UID.
+     * The serial version UID for serialization.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7257246289191278761L;
 
     /**
      * Creates a new ExtractionException.

@@ -99,6 +99,9 @@
             23. interact is a php project (#1609)
             24. finder is drupal plugin (#1626)
             25. archiver project is a golang module (#1627)
+            26. r_project is the r programming language
+            27. r_project is the r programming language
+            28. cpe:/a:jwt_project:jwt is a php library (#1697)
         ]]></notes>
         <filePath regex="true">.*(\.(dll|jar|ear|war|pom|nupkg|nuspec|aar)|pom\.xml|package.json|packages.config)$</filePath>
         <cpe>cpe:/a:sandbox:sandbox</cpe>
@@ -130,6 +133,8 @@
         <cpe>cpe:/a:interact:interact</cpe>
         <cpe>cpe:/a:finder_project:finder</cpe>
         <cpe>cpe:/a:archiver_project:archiver</cpe>
+        <cpe>cpe:/a:r_project:r</cpe>
+        <cpe>cpe:/a:jwt_project:jwt</cpe>
     </suppress>
     <suppress base="true">
         <notes><![CDATA[
@@ -344,7 +349,15 @@
         <cpe>cpe:/a:apache:http_server</cpe>
         <cpe>cpe:/a:apache:apache_http_server</cpe>
         <cpe>cpe:/a:free_java_web_server:free_java_web_server</cpe>
-     </suppress>
+    </suppress>
+    <suppress base="true">
+        <notes><![CDATA[
+        FP on jetty-proxy
+        ]]></notes>
+        <gav regex="true">^org\.eclipse\.jetty:jetty-proxy:.*$</gav>
+        <cpe>cpe:/a:eclipse:jetty</cpe>
+        <cpe>cpe:/a:jetty:jetty</cpe>
+    </suppress>
     <suppress base="true">
         <notes><![CDATA[
         False positives found while investigating https://github.com/jeremylong/dependency-check-gradle/issues/103

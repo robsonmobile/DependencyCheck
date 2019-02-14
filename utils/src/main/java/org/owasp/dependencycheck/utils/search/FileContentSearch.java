@@ -48,7 +48,7 @@ public final class FileContentSearch {
      * @throws IOException thrown if there is an error reading the file
      */
     public static boolean contains(File file, String pattern) throws IOException {
-        try (Scanner fileScanner = new Scanner(file)) {
+        try (Scanner fileScanner = new Scanner(file, "UTF-8")) {
             final Pattern regex = Pattern.compile(pattern);
             if (fileScanner.findWithinHorizon(regex, 0) != null) {
                 return true;
@@ -71,13 +71,8 @@ public final class FileContentSearch {
         for (String pattern : patterns) {
             regexes.add(Pattern.compile(pattern));
         }
-        try (Scanner fileScanner = new Scanner(file)) {
-            for (Pattern regex : regexes) {
-                if (fileScanner.findWithinHorizon(regex, 0) != null) {
-                    return true;
-                }
-            }
+        try (Scanner fileScanner = new Scanner(file, "UTF-8")) {
+            return regexes.stream().anyMatch((regex) -> (fileScanner.findWithinHorizon(regex, 0) != null));
         }
-        return false;
     }
 }

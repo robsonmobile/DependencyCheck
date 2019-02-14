@@ -27,9 +27,9 @@ import java.io.IOException;
 public class InvalidSettingException extends IOException {
 
     /**
-     * The serial version UID.
+     * The serial version UID for serialization.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5189805248759495398L;
 
     /**
      * Creates a new InvalidSettingException.
